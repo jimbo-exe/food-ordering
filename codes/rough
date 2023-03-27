@@ -1,0 +1,125 @@
+CREATE TABLE User_Entity (
+    ID INT PRIMARY KEY,
+    Full_Name VARCHAR(255),
+    Contact VARCHAR(255),
+    Email_Address VARCHAR(255),
+    Username VARCHAR(255),
+    Password VARCHAR(255)
+);
+
+CREATE TABLE Site_Information_Entity (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Description VARCHAR(255),
+    Contact_Info VARCHAR(255),
+    Address VARCHAR(255),
+    User_ID INT,
+    Last_Update DATE,
+    FOREIGN KEY (User_ID) REFERENCES User_Entity(ID)
+);
+
+CREATE TABLE Payment_Entity (
+    ID INT PRIMARY KEY,
+    Order_ID INT,
+    Amount FLOAT,
+    Paid_By VARCHAR(255),
+    Date DATE,
+    Processed_By INT,
+    FOREIGN KEY (Order_ID) REFERENCES Order_Entity(ID),
+    FOREIGN KEY (Processed_By) REFERENCES User_Entity(ID)
+);
+
+CREATE TABLE Order_Entity (
+    ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Order_Date DATE,
+    Total_Amount FLOAT,
+    Order_Status VARCHAR(255),
+    Processed_By INT,
+    FOREIGN KEY (Customer_ID) REFERENCES Customer_Entity(ID),
+    FOREIGN KEY (Processed_By) REFERENCES User_Entity(ID)
+);
+
+CREATE TABLE Order_Details_Entity (
+    ID INT PRIMARY KEY,
+    Order_ID INT,
+    Menu_ID INT,
+    Amount FLOAT,
+    No_of_Serving INT,
+    Total_Amount FLOAT,
+    FOREIGN KEY (Order_ID) REFERENCES Order_Entity(ID),
+    FOREIGN KEY (Menu_ID) REFERENCES Menu_Entity(ID)
+);
+
+CREATE TABLE Customer_Entity (
+    ID INT PRIMARY KEY,
+    First_Name VARCHAR(255),
+    Last_Name VARCHAR(255),
+    Middle_Name VARCHAR(255),
+    Email VARCHAR(255),
+    Phone_Number VARCHAR(255),
+    Landline VARCHAR(255),
+    Profile_Image BLOB,
+    Username VARCHAR(255),
+    Password VARCHAR(255),
+    Account_Status VARCHAR(255)
+);
+
+CREATE TABLE Rating_Entity (
+  ID INT PRIMARY KEY,
+  Menu_ID INT,
+  Score FLOAT,
+  Remarks TEXT,
+  Date_Recorded DATE,
+  Customer_ID INT,
+  FOREIGN KEY (Menu_ID) REFERENCES Menu_Entity(ID),
+  FOREIGN KEY (Customer_ID) REFERENCES Customer_Entity(ID)
+);
+
+CREATE TABLE Menu_Entity (
+  ID INT PRIMARY KEY,
+  Name VARCHAR(255),
+  Price FLOAT,
+  Type_ID INT,
+  Image BLOB,
+  Ingredients TEXT,
+  Status BOOLEAN DEFAULT TRUE CHECK (Status IN (0,1)),
+  FOREIGN KEY (Type_ID) REFERENCES Menu_Type_Entity(ID)
+);
+
+CREATE TABLE Menu_Type_Entity (
+  ID INT PRIMARY KEY,
+  Type_Name VARCHAR(255),
+  Description TEXT
+);
+
+
+Here are the SQL insert queries for Oracle:
+
+sql
+INSERT INTO User_Entity VALUES
+(1, 'John Doe', '1234567890', 'johndoe@example.com', 'johndoe', 'password');
+
+INSERT INTO Site_Information_Entity VALUES
+(1, 'Site Name', 'Site Description', 'Contact Info', 'Address', 1, TO_DATE('2022-12-31', 'YYYY-MM-DD'));
+
+INSERT INTO Payment_Entity VALUES
+(1, 1, 100.00, 'John Doe', TO_DATE('2022-12-31', 'YYYY-MM-DD'), 1);
+
+INSERT INTO Order_Entity VALUES
+(1, 1, TO_DATE('2022-12-31', 'YYYY-MM-DD'), 100.00, 'Order Status', 1);
+
+INSERT INTO Order_Details_Entity VALUES
+(1, 1, 1, 10.00, 2, 20.00);
+
+INSERT INTO Customer_Entity VALUES
+(1, 'John', 'Doe', '', 'johndoe@example.com', '1234567890', '', NULL, 'johndoe', 'password', '');
+
+INSERT INTO Rating_Entity VALUES
+(1, 1, 4.5, 'Remarks', TO_DATE('2022-12-31', 'YYYY-MM-DD'), 1);
+
+INSERT INTO Menu_Type_Entity VALUES
+(1, 'Type Name', 'Type Description');
+
+INSERT INTO Menu_Entity VALUES
+(1, 'Menu Name', 10.00, 1, NULL, '', TRUE);

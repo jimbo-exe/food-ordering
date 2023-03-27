@@ -1,0 +1,4 @@
+https://www.inettutor.com/diagrams/online-food-ordering-system-er-diagram/
+https://www.edrawmax.com/templates/1024779/
+https://itsourcecode.com/uml/online-food-ordering-system-er-diagram/
+https://github.com/jimbo-exe/food-ordering

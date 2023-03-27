@@ -1,0 +1,123 @@
+CREATE TABLE User (
+    ID NUMBER PRIMARY KEY,
+    FullName VARCHAR2(255),
+    Contact VARCHAR2(255),
+    EmailAddress VARCHAR2(255),
+    Username VARCHAR2(255),
+    Password VARCHAR2(255)
+);
+
+CREATE TABLE SiteInformation (
+    ID NUMBER PRIMARY KEY,
+    Name VARCHAR2(255),
+    Description VARCHAR2(255),
+    ContactInfo VARCHAR2(255),
+    Address VARCHAR2(255),
+    UserID NUMBER,
+    LastUpdate DATE,
+    FOREIGN KEY (UserID) REFERENCES User(ID)
+);
+
+CREATE TABLE Payment (
+    ID NUMBER PRIMARY KEY,
+    OrderID NUMBER,
+    Amount NUMBER(10,2),
+    PaidBy VARCHAR2(255),
+    DatePaid DATE,
+    ProcessedBy NUMBER,
+    FOREIGN KEY (OrderID) REFERENCES "Order"(ID),
+    FOREIGN KEY (ProcessedBy) REFERENCES User(ID)
+);
+
+CREATE TABLE "Order" (
+    ID NUMBER PRIMARY KEY,
+    CustomerID NUMBER,
+    OrderDate DATE,
+    TotalAmount NUMBER(10,2),
+    OrderStatus VARCHAR2(255),
+    ProcessedBy NUMBER,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(ID),
+    FOREIGN KEY (ProcessedBy) REFERENCES User(ID)
+);
+
+CREATE TABLE OrderDetails (
+    ID NUMBER PRIMARY KEY,
+    OrderID NUMBER,
+    MenuID NUMBER,
+    Amount NUMBER(10,2),
+    NoOfServing NUMBER,
+    TotalAmount NUMBER(10,2),
+    FOREIGN KEY (OrderID) REFERENCES "Order"(ID),
+    FOREIGN KEY (MenuID) REFERENCES Menu(ID)
+);
+
+CREATE TABLE Customer (
+    ID NUMBER PRIMARY KEY,
+    FirstName VARCHAR2(255),
+    LastName VARCHAR2(255),
+    MiddleName VARCHAR2(255),
+    Email VARCHAR2(255),
+    PhoneNumber VARCHAR2(255),
+    Landline VARCHAR2(255),
+    ProfileImage VARCHAR2(255),
+    Username VARCHAR2(255),
+    Password VARCHAR2(255),
+    AccountStatus VARCHAR2(255)
+);
+
+CREATE TABLE Rating (
+    ID NUMBER PRIMARY KEY,
+    MenuID NUMBER,
+    Score NUMBER,
+    Remarks VARCHAR2(255),
+    DateRecorded DATE,
+    CustomerID NUMBER,
+    FOREIGN KEY (MenuID) REFERENCES Menu(ID),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(ID)
+);
+
+CREATE TABLE Menu (
+    ID NUMBER PRIMARY KEY,
+    Name VARCHAR2(255),
+    Price NUMBER(10,2),
+    TypeID NUMBER,
+    Image VARCHAR2(255),
+    Ingredients VARCHAR2(255),
+    Status VARCHAR2(255),
+    FOREIGN KEY (TypeID) REFERENCES MenuType(ID)
+);
+
+CREATE TABLE MenuType (
+    ID NUMBER PRIMARY KEY,
+    TypeName VARCHAR2(255),
+    Description VARCHAR2(255)
+);
+
+INSERT INTO User VALUES (101, 'John Smith', '555-1234', 'john.smith@example.com', 'jsmith', 'password');
+INSERT INTO User VALUES (201, 'Jane Doe', '555-5678', 'jane.doe@example.com', 'jdoe', 'password');
+
+INSERT INTO SiteInformation VALUES (1, 'Site 1', 'Description for Site 1', 'Contact info for Site 1', 'Address for Site 1', 101, TO_DATE('2022-01-01', 'YYYY-MM-DD'));
+INSERT INTO SiteInformation VALUES (2, 'Site 2', 'Description for Site 2', 'Contact info for Site 2', 'Address for Site 2', 201, TO_DATE('2022-02-01', 'YYYY-MM-DD'));
+
+
+INSERT INTO Payment VALUES (1, 301, 100.00, 'John Smith', TO_DATE('2022-01-01', 'YYYY-MM-DD'), 201);
+INSERT INTO Payment VALUES (2, 302, 75.00, 'Jane Doe', TO_DATE('2022-02-01', 'YYYY-MM-DD'), 201);
+
+INSERT INTO "Order" VALUES (301, 201, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 100.00, 'Completed', 101);
+INSERT INTO "Order" VALUES (302, 101, TO_DATE('2022-02-01', 'YYYY-MM-DD'), 75.00, 'Completed', 201);
+
+INSERT INTO OrderDetails VALUES (1, 301, 101, 50.00, 2, 100.00);
+INSERT INTO OrderDetails VALUES (2, 301, 102, 25.00, 1, 25.00);
+INSERT INTO OrderDetails VALUES (3, 302, 101, 75.00, 3, 225.00);
+
+INSERT INTO Customer VALUES (101, 'John', 'Smith', 'A', 'john.smith@example.com', '555-1234', '555-5678', 'profile.jpg', 'jsmith', 'password', 'Active');
+INSERT INTO Customer VALUES (201, 'Jane', 'Doe', '', 'jane.doe@example.com', '555-5678', '555-1234', 'profile.jpg', 'jdoe', 'password', 'Inactive');
+
+INSERT INTO Rating VALUES (1, 101, 4, 'Great menu item!', TO_DATE('2022-01-01', 'YYYY-MM-DD'), 101);
+INSERT INTO Rating VALUES (2, 102, 3, 'Not bad', TO_DATE('2022-01-02', 'YYYY-MM-DD'), 201);
+
+INSERT INTO Menu VALUES (101, 'Menu Item 1', 10.00, 1, 'menu_item_1.jpg', 'Ingredients for Menu Item 1', 'Active');
+INSERT INTO Menu VALUES (102, 'Menu Item 2', 5.00, 2, 'menu_item_2.jpg', 'Ingredients for Menu Item 2', 'Active');
+
+INSERT INTO MenuType VALUES (1, 'Type 1', 'Description for Type 1');
+INSERT INTO MenuType VALUES (2, 'Type 2', 'Description for Type 2');
